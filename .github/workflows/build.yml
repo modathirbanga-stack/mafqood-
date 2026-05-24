@@ -1,0 +1,36 @@
+name: Build Mafqood APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.6'
+          channel: 'stable'
+      - name: Create assets
+        run: |
+          mkdir -p assets/images assets/fonts
+          cp /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf assets/fonts/Tajawal-Regular.ttf 2>/dev/null || touch assets/fonts/Tajawal-Regular.ttf
+          cp /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf assets/fonts/Tajawal-Medium.ttf 2>/dev/null || touch assets/fonts/Tajawal-Medium.ttf
+          cp /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf assets/fonts/Tajawal-Bold.ttf 2>/dev/null || touch assets/fonts/Tajawal-Bold.ttf
+          cp /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf assets/fonts/Tajawal-ExtraBold.ttf 2>/dev/null || touch assets/fonts/Tajawal-ExtraBold.ttf
+          touch assets/images/.gitkeep
+      - run: flutter pub get
+      - run: flutter build apk --debug --no-tree-shake-icons
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mafqood-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 30
