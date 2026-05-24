@@ -26,6 +26,7 @@ jobs:
           flutter create --org com.mafqood --project-name mafqood /tmp/fresh_app
           cp -r lib /tmp/fresh_app/lib
           cp pubspec.yaml /tmp/fresh_app/pubspec.yaml
+          sed -i 's/intl: \^0.18.1/intl: \^0.19.0/' /tmp/fresh_app/pubspec.yaml
           mkdir -p /tmp/fresh_app/assets/images /tmp/fresh_app/assets/fonts
           cp /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf /tmp/fresh_app/assets/fonts/Tajawal-Regular.ttf 2>/dev/null || touch /tmp/fresh_app/assets/fonts/Tajawal-Regular.ttf
           cp /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf /tmp/fresh_app/assets/fonts/Tajawal-Medium.ttf 2>/dev/null || touch /tmp/fresh_app/assets/fonts/Tajawal-Medium.ttf
