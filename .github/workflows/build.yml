@@ -18,7 +18,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'
+          flutter-version: '3.24.5'
           channel: 'stable'
 
       - name: Create fresh Flutter project and inject code
@@ -32,6 +32,8 @@ jobs:
           cp /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf /tmp/fresh_app/assets/fonts/Tajawal-Bold.ttf 2>/dev/null || touch /tmp/fresh_app/assets/fonts/Tajawal-Bold.ttf
           cp /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf /tmp/fresh_app/assets/fonts/Tajawal-ExtraBold.ttf 2>/dev/null || touch /tmp/fresh_app/assets/fonts/Tajawal-ExtraBold.ttf
           touch /tmp/fresh_app/assets/images/.gitkeep
+          sed -i 's/targetSdkVersion flutter.targetSdkVersion/targetSdkVersion 35/' /tmp/fresh_app/android/app/build.gradle
+          sed -i 's/compileSdkVersion flutter.compileSdkVersion/compileSdkVersion 35/' /tmp/fresh_app/android/app/build.gradle
 
       - name: Install dependencies
         working-directory: /tmp/fresh_app
