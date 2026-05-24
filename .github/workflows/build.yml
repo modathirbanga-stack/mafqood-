@@ -37,11 +37,12 @@ jobs:
         working-directory: /tmp/fresh_app
         run: flutter pub get
 
-      - name: Build APK
+      - name: Build APK (fat - all architectures)
         working-directory: /tmp/fresh_app
         run: flutter build apk --debug --no-tree-shake-icons
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: mafqood-apk
           path: /tmp/fresh_app/build/app/outputs/flutter-apk/app-debug.apk
