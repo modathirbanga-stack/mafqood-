@@ -1,4 +1,43 @@
-- name: Build APK
+name: Build Mafqood APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.6'
+          channel: 'stable'
+
+      - name: Create fresh Flutter project and inject code
+        run: |
+          flutter create --org com.mafqood --project-name mafqood /tmp/fresh_app
+          cp -r lib /tmp/fresh_app/lib
+          cp pubspec.yaml /tmp/fresh_app/pubspec.yaml
+          mkdir -p /tmp/fresh_app/assets/images /tmp/fresh_app/assets/fonts
+          cp /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf /tmp/fresh_app/assets/fonts/Tajawal-Regular.ttf 2>/dev/null || touch /tmp/fresh_app/assets/fonts/Tajawal-Regular.ttf
+          cp /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf /tmp/fresh_app/assets/fonts/Tajawal-Medium.ttf 2>/dev/null || touch /tmp/fresh_app/assets/fonts/Tajawal-Medium.ttf
+          cp /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf /tmp/fresh_app/assets/fonts/Tajawal-Bold.ttf 2>/dev/null || touch /tmp/fresh_app/assets/fonts/Tajawal-Bold.ttf
+          cp /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf /tmp/fresh_app/assets/fonts/Tajawal-ExtraBold.ttf 2>/dev/null || touch /tmp/fresh_app/assets/fonts/Tajawal-ExtraBold.ttf
+          touch /tmp/fresh_app/assets/images/.gitkeep
+
+      - name: Install dependencies
+        working-directory: /tmp/fresh_app
+        run: flutter pub get
+
+      - name: Build APK
         working-directory: /tmp/fresh_app
         run: flutter build apk --debug --no-tree-shake-icons
 
